@@ -12,10 +12,18 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { sortByKeys } from '../db/models/Contacts.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 
+
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query, sortByKeys);
-  const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder });
+
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+   
+  });
 
   if (!contacts) {
     throw createHttpError(404, `Contact not found`);
