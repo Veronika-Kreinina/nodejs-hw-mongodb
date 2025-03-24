@@ -15,9 +15,6 @@ export const createContactShema = Joi.object({
   isFavourite: Joi.boolean(),
   contactType: Joi.string()
     .valid(...typeList)
-    .required()
-    .min(3)
-    .max(20)
     .required(),
 });
 
@@ -32,8 +29,5 @@ export const updateContactShema = Joi.object({
     .min(3)
     .max(20),
   isFavourite: Joi.boolean(),
-  contactType: Joi.string()
-    .valid(...typeList)
-    .min(3)
-    .max(20),
+  contactType: Joi.string().valid(...typeList),
 });
