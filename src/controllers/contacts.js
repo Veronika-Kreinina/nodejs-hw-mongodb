@@ -12,7 +12,6 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { sortByKeys } from '../db/models/Contacts.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 
-
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query, sortByKeys);
@@ -22,11 +21,10 @@ export const getContactsController = async (req, res) => {
     perPage,
     sortBy,
     sortOrder,
-   
   });
 
   if (!contacts) {
-    throw createHttpError(404, `Contact not found`);
+    throw new createHttpError(404, `Contact not found`);
   }
 
   res.status(200).json({
@@ -41,7 +39,7 @@ export const getContactByIdController = async (req, res) => {
   const contact = await getOneContact(contactId);
 
   if (!contact) {
-    throw createHttpError(404, `Contact with id:${contactId} not found`);
+    throw new createHttpError(404, `Contact with id:${contactId} not found`);
   }
   res.status(200).json({
     status: 200,
@@ -78,13 +76,14 @@ export const patchContactController = async (req, res) => {
   const result = await updateContact(contactId, req.body);
 
   if (!result) {
-    throw createHttpError(404, 'Contact with id:${contactId} not found');
+    throw new createHttpError(404, 'Contact with id:${contactId} not found');
   }
+  console.log(result);
 
   res.status(200).json({
     status: 200,
     message: 'Successfully patched a contact!',
-    data: result,
+    data: result.data,
   });
 };
 
@@ -92,7 +91,7 @@ export const deleteContactController = async (req, res) => {
   const { contactId } = req.params;
   const result = await deleteContact({ _id: contactId });
   if (!result) {
-    throw createHttpError(404, 'Contact with id:${contactId} not found');
+    throw new createHttpError(404, 'Contact with id:${contactId} not found');
   }
 
   res.status(204).send();

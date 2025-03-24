@@ -6,7 +6,7 @@ import { getEnvVar } from './utils/getEnvVar.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 // import { logger } from './middlewares/logger.js';
-import authRouter from './routers/auth.js';
+// import authRouter from './routers/auth.js';
 
 export const setupServer = () => {
   const app = express();
@@ -14,14 +14,14 @@ export const setupServer = () => {
   app.use(express.json());
   // app.use(logger);
 
-  app.use('/auth', authRouter);
+  // app.use('/auth', authRouter);
   app.use('/contacts', contactsRouter);
 
   app.use(notFoundHandler);
 
   app.use(errorHandler);
 
-  const PORT = Number(getEnvVar('PORT', 3030));
+  const PORT = Number(getEnvVar('PORT', 3000));
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
