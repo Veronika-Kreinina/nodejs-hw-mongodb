@@ -1,7 +1,7 @@
 import createHttpError from 'http-errors';
 
 export const validateBody = (shema) => {
-  async (req, _res, next) => {
+  const func = async (req, _res, next) => {
     try {
       await shema.validateAsync(req.body, {
         abortEarly: false,
@@ -14,4 +14,5 @@ export const validateBody = (shema) => {
       next(errors);
     }
   };
+  return func;
 };
