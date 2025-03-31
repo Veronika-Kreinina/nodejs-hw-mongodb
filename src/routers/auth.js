@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { valiteBody } from '../utils/validateBody.js';
+import { validateBody } from '../utils/validateBody.js';
 import { authRegisterShema } from '../validation/auth.js';
 
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
@@ -9,7 +9,7 @@ const authRouter = Router();
 
 authRouter.post(
   '/register',
-  valiteBody(authRegisterShema),
+  validateBody(authRegisterShema),
   ctrlWrapper(registerController),
 );
 
