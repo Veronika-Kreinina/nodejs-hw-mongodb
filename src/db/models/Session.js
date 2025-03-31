@@ -1,9 +1,10 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { model, Schema } from 'mongoose';
 
 const sessionSchema = new Schema(
   {
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'users',
       required: true,
     },
     accessToken: {
@@ -14,8 +15,14 @@ const sessionSchema = new Schema(
       type: String,
       required: true,
     },
-    accessTokenValidUntil: { Date, required: true },
-    refreshTokenValidUntil: { Date, required: true },
+    accessTokenValidUntil: {
+      type: Date,
+      required: true,
+    },
+    refreshTokenValidUntil: {
+      type: Date,
+      required: true,
+    },
   },
   {
     versionKey: false,
