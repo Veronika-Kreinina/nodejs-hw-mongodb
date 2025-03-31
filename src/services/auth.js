@@ -3,7 +3,6 @@ import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
 import { UserCollection } from '../db/models/User.js';
 import { SessionCollection } from '../db/models/Session.js';
-import { Session } from 'node:inspector';
 
 export const register = async (payload) => {
   const newUser = await UserCollection.findOne({ email: payload.email });
@@ -44,4 +43,31 @@ export const login = async (email, password) => {
 export const logout = async (sessionId) => {
   await SessionCollection.deleteOne({ _id: sessionId });
   return undefined;
+};
+
+export const refresh = async (sessionId, refreshToken) => {
+  const currentSession = await SessionCollection.findOne({
+    _id: sessionId,
+    refreshToken,
+  });
+
+  if (currentSession === null) {
+    throw createHttpError.Unauthorized('Session not found');
+  }
+
+  if (currentSession.refreshTokenValidUntil < new Date()) {
+    throw createHttpError.Unauthorized('Refresh token is expired');
+  }
+  await SessionCollection.deleteOne({
+    _id: currentSession._id,
+    refreshToken: currentSession.refreshToken,
+  });
+
+  return SessionCollection.create({
+    userId: currentSession.userId,
+    accessToken: crypto.randomBytes(30).toString('base64'),
+    refreshToken: crypto.randomBytes(30).toString('base64'),
+    accessTokenValidUntil: new Date(Date.now() + 10 * 60 * 1000),
+    refreshTokenValidUntil: new Date(Date.now() + 24 * 10 * 60 * 1000),
+  });
 };
