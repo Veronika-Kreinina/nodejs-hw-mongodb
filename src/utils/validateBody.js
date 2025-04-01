@@ -1,17 +1,17 @@
-import createHttpError from 'http-errors';
-
 export const validateBody = (shema) => {
-  const func = async (req, _res, next) => {
+  const func = async (req, res, next) => {
     try {
       await shema.validateAsync(req.body, {
         abortEarly: false,
       });
       next();
     } catch (error) {
-      const errors = error.details.map((detail) => {
-        detail.message;
+      const errorDetails = error.error.details.map((detail) => detail.message);
+      res.status(400).json({
+        status: 400,
+        error: errorDetails,
       });
-      next(new createHttpError.BadRequest(errors));
+      next();
     }
   };
   return func;
