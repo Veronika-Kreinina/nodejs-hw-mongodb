@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import contactsRouter from './routers/contacts.js';
 import { getEnvVar } from './utils/getEnvVar.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { authenticate } from './middlewares/authenticate.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 // import { logger } from './middlewares/logger.js';
 import authRouter from './routers/auth.js';
@@ -17,7 +18,7 @@ export const setupServer = () => {
   app.use(cookieParser());
 
   app.use('/auth', authRouter);
-  app.use('/contacts', contactsRouter);
+  app.use('/contacts', authenticate, contactsRouter);
 
   app.use(notFoundHandler);
 
