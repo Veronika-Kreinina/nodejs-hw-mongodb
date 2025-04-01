@@ -11,7 +11,6 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { sortByKeys } from '../db/models/Contacts.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
-import mongoose from 'mongoose';
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
