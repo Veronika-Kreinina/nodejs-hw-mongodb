@@ -1,16 +1,31 @@
 import { Router } from 'express';
-import { valiteBody } from '../utils/validateBody.js';
-import { authRegisterShema } from '../validation/auth.js';
+import { validateBody } from '../utils/validateBody.js';
+import { registerShema, loginSchema } from '../validation/auth.js';
 
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { registerController } from '../controllers/auth.js';
+import {
+  loginController,
+  registerController,
+  logoutController,
+  refreshController,
+} from '../controllers/auth.js';
 
 const authRouter = Router();
 
 authRouter.post(
   '/register',
-  valiteBody(authRegisterShema),
+  validateBody(registerShema),
   ctrlWrapper(registerController),
 );
+
+authRouter.post(
+  '/login',
+  validateBody(loginSchema),
+  ctrlWrapper(loginController),
+);
+
+authRouter.post('/logout', ctrlWrapper(logoutController));
+
+authRouter.post('/refresh', ctrlWrapper(refreshController));
 
 export default authRouter;

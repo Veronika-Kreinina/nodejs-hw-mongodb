@@ -21,6 +21,7 @@ export const getContactsController = async (req, res) => {
     perPage,
     sortBy,
     sortOrder,
+    userId: req.user.id,
   });
 
   if (!contacts) {
