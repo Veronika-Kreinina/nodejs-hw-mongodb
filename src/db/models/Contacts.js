@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { typeList } from '../../constants/contacts.js';
 
 const contactsShema = new Schema(
@@ -27,7 +27,8 @@ const contactsShema = new Schema(
       required: true,
     },
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
+      ref: 'users',
       required: true,
     },
   },
