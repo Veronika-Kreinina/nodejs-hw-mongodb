@@ -21,7 +21,6 @@ export const getContactsController = async (req, res) => {
     perPage,
     sortBy,
     sortOrder,
-    userId: req.user.id,
   });
 
   if (!contacts) {
@@ -39,6 +38,7 @@ export const getContactByIdController = async (req, res) => {
   const { contactId } = req.params;
 
   const contact = await getOneContact(contactId);
+  console.log('contactId:', contactId);
 
   if (!contact) {
     throw new createHttpError(404, `Contact with id:${contactId} not found`);
