@@ -11,10 +11,14 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { sortByKeys } from '../db/models/Contacts.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getContactsController = async (req, res) => {
+  console.log(req.user);
+
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query, sortByKeys);
+  const filter = parseFilterParams(req.query);
 
   const contacts = await getAllContacts({
     page,
@@ -22,6 +26,7 @@ export const getContactsController = async (req, res) => {
     sortBy,
     sortOrder,
     userId: req.user.id,
+    filter,
   });
 
   if (!contacts) {
@@ -39,6 +44,10 @@ export const getContactByIdController = async (req, res) => {
   const { contactId } = req.params;
   const contact = await getOneContact(contactId);
 
+  if (contact.userId.toString() !== req.user.id.toString()) {
+    throw new createHttpError.Forbidden('Contact is not allowed');
+  }
+
   if (!contact) {
     throw new createHttpError(404, `Contact with id:${contactId} not found`);
   }
@@ -50,11 +59,16 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
-  const data = await addContact(req.body);
+  const contact = await addContact({
+    ...req.body,
+    userId: req.user.id,
+  });
 
-  res
-    .status(201)
-    .json({ status: 201, message: 'Succesfully created a contact', data });
+  res.status(201).json({
+    status: 201,
+    message: 'Succesfully created a contact',
+    data: contact,
+  });
 };
 
 export const upsertContactController = async (req, res) => {
