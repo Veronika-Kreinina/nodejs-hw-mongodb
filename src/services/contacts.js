@@ -1,21 +1,33 @@
 import { ContactsCollection } from '../db/models/Contacts.js';
+import { SORT_ORDER } from '../constants/contacts.js';
 
 export const getAllContacts = async ({
   page = 1,
   perPage = 10,
-  sortBy = '_id',
-  sortOrder = 'asc',
+  sortOrder = SORT_ORDER.ASC,
+  sortBy = 'name',
+  filter = {},
   userId,
 }) => {
   const limit = perPage;
   const skip = (page - 1) * limit;
 
+  const contactsQuery = ContactsCollection.find({ userId });
+
+  if (filter.contactType) {
+    contactsQuery.where('contactType').equals(filter.contactType);
+  }
+  if (filter.isFavourite !== undefined) {
+    contactsQuery.where('isFavourite').equals(filter.isFavourite);
+  }
+
   const [totalItems, contacts] = await Promise.all([
-    ContactsCollection.countDocuments(),
-    ContactsCollection.find({ userId })
+    ContactsCollection.countDocuments(contactsQuery),
+    contactsQuery
       .skip(skip)
       .limit(limit)
-      .sort({ [sortBy]: sortOrder }),
+      .sort({ [sortBy]: sortOrder })
+      .exec(),
   ]);
 
   const totalPages = Math.ceil(totalItems / perPage);
