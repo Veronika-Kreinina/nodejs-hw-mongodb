@@ -1,33 +1,35 @@
-// const parseContactType = (type) => {
-//   const isString = typeof type === 'string';
 
-//   if (!isString) return;
+const parseContactType = (type) => {
+  const isString = typeof type === 'string';
 
-//   const types = ['work', 'home', 'personal'];
+  if (!isString) return;
 
-//   if (types.includes(type)) return type;
-// };
+  const types = ['work', 'home', 'personal'];
 
-// const parseIsFavourite = (isFavourite) => {
-//   const isString = typeof isFavourite === 'string';
-//   const isBoolean = typeof isFavourite === 'boolean';
+  if (types.includes(type)) return type;
+};
 
-//   if (isBoolean) return isFavourite;
+const parseIsFavourite = (isFavourite) => {
+  const isString = typeof isFavourite === 'string';
+  const isBoolean = typeof isFavourite === 'boolean';
 
-//   if (isString) {
-//     if (isFavourite.toLowerCase() === 'true') return true;
-//     if (isFavourite.toLowerCase() === 'false') return false;
-//   }
-// };
+  if (isBoolean) return isFavourite;
 
-// export const parseFilterParams = (query) => {
-//   const { contactType, isFavourite } = query;
+  if (isString) {
+    if (isFavourite.toLowerCase() === 'true') return true;
+    if (isFavourite.toLowerCase() === 'false') return false;
+  }
+};
 
-//   const parsedContactType = parseContactType(contactType);
-//   const parsedIsFavourite = parseIsFavourite(isFavourite);
+export const parseFilterParams = (query) => {
+  const { contactType, isFavourite } = query;
 
-//   return {
-//     contactType: parsedContactType,
-//     isFavourite: parsedIsFavourite,
-//   };
-// };
+  const parsedContactType = parseContactType(contactType);
+  const parsedIsFavourite = parseIsFavourite(isFavourite);
+
+  return {
+    contactType: parsedContactType,
+    isFavourite: parsedIsFavourite,
+  };
+};
+
