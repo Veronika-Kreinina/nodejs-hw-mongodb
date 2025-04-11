@@ -1,5 +1,7 @@
 import { Router } from 'express';
 
+import express from 'express';
+
 import {
   getContactsController,
   getContactByIdController,
@@ -19,6 +21,7 @@ import { isValidId } from '../middlewares/isValidId.js';
 import { upload } from '../middlewares/upload.js';
 
 const contactsRouter = Router();
+const jsonParser = express.json();
 
 contactsRouter.get('/', ctrlWrapper(getContactsController));
 
@@ -37,6 +40,7 @@ contactsRouter.post(
 
 contactsRouter.put(
   '/:contactId',
+  jsonParser,
   isValidId,
   validateBody(updateContactShema),
   ctrlWrapper(upsertContactController),
@@ -44,6 +48,7 @@ contactsRouter.put(
 
 contactsRouter.patch(
   '/:contactId',
+  jsonParser,
   isValidId,
   validateBody(updateContactShema),
   ctrlWrapper(patchContactController),
