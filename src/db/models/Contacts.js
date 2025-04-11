@@ -26,11 +26,13 @@ const contactsShema = new Schema(
       default: false,
       required: true,
     },
+
     userId: {
       type: Schema.Types.ObjectId,
 
       required: true,
     },
+
   },
   {
     versionKey: false,

@@ -1,3 +1,4 @@
+
 const parseContactType = (type) => {
   const isString = typeof type === 'string';
 
@@ -31,3 +32,4 @@ export const parseFilterParams = (query) => {
     isFavourite: parsedIsFavourite,
   };
 };
+
