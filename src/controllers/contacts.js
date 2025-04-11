@@ -1,4 +1,6 @@
 import createHttpError from 'http-errors';
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
 
 import {
   addContact,
@@ -59,9 +61,12 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
+  fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
+
   const contact = await addContact({
     ...req.body,
     userId: req.user.id,
+    photo: req.file.filename,
   });
 
   res.status(201).json({
