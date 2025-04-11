@@ -18,6 +18,7 @@ import {
 
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { isValidId } from '../middlewares/isValidId.js';
+import { upload } from '../middlewares/upload.js';
 
 const contactsRouter = Router();
 const jsonParser = express.json();
@@ -32,7 +33,7 @@ contactsRouter.get(
 
 contactsRouter.post(
   '/',
-  jsonParser,
+  upload.single('photo'),
   validateBody(createContactShema),
   ctrlWrapper(addContactController),
 );

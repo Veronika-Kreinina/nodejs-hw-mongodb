@@ -1,8 +1,19 @@
+import * as fs from 'node:fs';
+import path from 'node:path';
 import createHttpError from 'http-errors';
 import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { UserCollection } from '../db/models/User.js';
 import { SessionCollection } from '../db/models/Session.js';
+import { sendEmail } from '../utils/sendEmail.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import Handlebars from 'handlebars';
+
+const RESET_PASSWORD_TEMPLATES = fs.readFileSync(
+  path.resolve('src/templates/reset-pwd.hbs'),
+  { encoding: 'utf-8' },
+);
 
 export const register = async (payload) => {
   const newUser = await UserCollection.findOne({ email: payload.email });
@@ -70,4 +81,47 @@ export const refresh = async (sessionId, refreshToken) => {
     accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000),
     refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 10 * 60 * 1000),
   });
+};
+
+export const requestResetPassword = async (email) => {
+  const user = await UserCollection.findOne({ email });
+  if (user === null) {
+    throw createHttpError.NotFound('User not found');
+  }
+  const resetToken = jwt.sign(
+    { sub: user.id, name: user.name },
+    getEnvVar('JWT_SECRET'),
+    {
+      expiresIn: '45m',
+    },
+  );
+  const template = Handlebars.compile(RESET_PASSWORD_TEMPLATES);
+
+  await sendEmail(email, 'Reset your passwod', template({ resetToken }));
+};
+
+export const resetPassword = async (token, password) => {
+  try {
+    const decoded = jwt.verify(token, getEnvVar('JWT_SECRET'));
+
+    const user = await UserCollection.findById(decoded.sub);
+    if (user === null) {
+      throw createHttpError.NotFound('User not found!');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await UserCollection.findOneAndUpdate(user._id, {
+      password: hashedPassword,
+    });
+  } catch (error) {
+    if (
+      error.name === 'JsonWebTokenError' ||
+      error.name === 'TokenExpiredError'
+    ) {
+      throw createHttpError.Unauthorized('Token is expired or invalid.');
+    }
+
+    throw error;
+  }
 };
