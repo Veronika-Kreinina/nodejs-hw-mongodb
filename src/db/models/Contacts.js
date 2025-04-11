@@ -31,6 +31,10 @@ const contactsShema = new Schema(
 
       required: true,
     },
+    photo: {
+      type: String,
+      default: null,
+    },
   },
   {
     versionKey: false,
