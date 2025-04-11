@@ -1,8 +1,10 @@
 import cors from 'cors';
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import path from 'node:path';
 
 import contactsRouter from './routers/contacts.js';
+
 import { getEnvVar } from './utils/getEnvVar.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { authenticate } from './middlewares/authenticate.js';
@@ -13,6 +15,8 @@ export const setupServer = () => {
   const app = express();
   app.use(cors());
   app.use(express.json());
+
+  app.use('/uploads', express.static(path.resolve('src', 'uploads')));
 
   app.use(cookieParser());
 

@@ -10,10 +10,12 @@ import {
   updateContact,
 } from '../services/contacts.js';
 
+import { getEnvVar } from '../utils/getEnvVar.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { sortByKeys } from '../db/models/Contacts.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
 
 export const getContactsController = async (req, res) => {
   console.log(req.user);
@@ -61,12 +63,24 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
-  fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
+  let photo = null;
+
+  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+    const result = await uploadToCloudinary(req.file.path);
+    photo = result.secure_url;
+  } else {
+    await fs.rename(
+      req.file.path,
+      path.resolve('src', 'uploads', req.file.filename),
+    );
+
+    photo = `http://localhost:3000/uploads/${req.file.filename}`;
+  }
 
   const contact = await addContact({
     ...req.body,
     userId: req.user.id,
-    photo: req.file.filename,
+    photo,
   });
 
   res.status(201).json({
