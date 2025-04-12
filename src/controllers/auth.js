@@ -5,7 +5,9 @@ import {
   register,
   requestResetPassword,
   resetPassword,
+  loginOrRegister,
 } from '../services/auth.js';
+import { getOauthURL, validateCode } from '../utils/googleOauth.js';
 
 export const registerController = async (req, res) => {
   const user = await register(req.body);
@@ -88,4 +90,22 @@ export const resetPasswordController = async (req, res) => {
   //   message: 'Password has been successfully reset.',
   //   data: {},
   // });
+};
+
+export const getOauthUrlController = async (req, res) => {
+  const url = getOauthURL();
+  res.json({
+    status: 200,
+    message: 'Successfully  get oauth url',
+    data: {
+      oauth_url: url,
+    },
+  });
+};
+
+export const confirmOauthController = async (req, res) => {
+  const ticket = await validateCode(req.body.code);
+  await loginOrRegister(ticket.payload.email, ticket.payload.name);
+
+  res.end();
 };
