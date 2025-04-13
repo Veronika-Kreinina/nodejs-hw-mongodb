@@ -40,6 +40,7 @@ contactsRouter.post(
 
 contactsRouter.put(
   '/:contactId',
+  upload.single('photo'),
   jsonParser,
   isValidId,
   validateBody(updateContactShema),
@@ -48,6 +49,7 @@ contactsRouter.put(
 
 contactsRouter.patch(
   '/:contactId',
+  upload.single('photo'),
   jsonParser,
   isValidId,
   validateBody(updateContactShema),
