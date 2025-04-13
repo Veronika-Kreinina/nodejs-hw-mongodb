@@ -31,7 +31,6 @@ export const getContactsController = async (req, res) => {
     sortOrder,
     userId: req.user.id,
     filter,
-
   });
 
   if (!contacts) {
@@ -49,7 +48,6 @@ export const getContactByIdController = async (req, res) => {
   const { contactId } = req.params;
 
   const contact = await getOneContact(contactId, req.user.id);
-
 
   // if (contact.userId.toString() !== req.user.id.toString()) {
   //   throw new createHttpError.Forbidden('Contact is not allowed');
