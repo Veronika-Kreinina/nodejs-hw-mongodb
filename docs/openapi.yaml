@@ -1,18 +1,26 @@
 openapi: 3.1.0
 info:
   version: 1.0.0
-  title: <назва вашого додатку>
+  title: Contacts Application
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: <опис вашого додатку>
-tags:
-  # теги, що ви будете використовувати
+  description:
+    RESTful API for managing personal contacts. Users can register, log in, and perform CRUD operations
+    on their contacts. The API uses token-based authentication via access and refresh tokens stored in sessions.
+    Built with Node.js, Express, and MongoDB.
+tags: 
+  - Contacts
+- User
+- Session
+
 servers:
   - url: http://localhost:3000
   - url: #посилання на задеплоєний сайт
 paths:
-  # тут будуть посилання на ендпоінти
+  /contacts/{contactId}:
+    get:
+      $ref: ../swagger/paths/contacts/{contactId}/get.yaml
 components:
   securitySchemes:
     bearerAuth:
