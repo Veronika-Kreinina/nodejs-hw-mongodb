@@ -10,15 +10,15 @@ info:
     on their contacts. The API uses token-based authentication via access and refresh tokens stored in sessions.
     Built with Node.js, Express, and MongoDB.
 tags:
-  - name: Contacts
+- name: Contacts
   description: Operations with contacts
-  - name: User
+- name: User
   description: Operations with users
-  - name: Session
+- name: Session
   description: Operations with sessions
 
 servers:
-  - url: http://localhost:3000
+  - url: http://127.0.0.1:3000
     description: Local server
   - url: https://your-deployment-url.com
     description: Production server
@@ -27,12 +27,11 @@ paths:
     get:
       $ref: ../swagger/paths/contacts/{contactId}/get.yaml
       patch:
-      $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
-    put:
-      $ref: ../swagger/paths/contacts/{contactId}/put.yaml
-    delete:
-      $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
-
+        $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
+        put:
+          $ref: ../swagger/paths/contacts/{contactId}/put.yaml
+            delete:
+              $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
   /contacts:
     get:
       $ref: ../swagger/paths/contacts/get.yaml
