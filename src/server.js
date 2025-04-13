@@ -6,6 +6,7 @@ import path from 'node:path';
 import contactsRouter from './routers/contacts.js';
 
 import { getEnvVar } from './utils/getEnvVar.js';
+import { authenticate } from './middlewares/authenticate.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
@@ -22,7 +23,7 @@ export const setupServer = () => {
   app.use(cookieParser());
 
   app.use('/auth', authRouter);
-  app.use('/contacts', contactsRouter);
+  app.use('/contacts', authenticate, contactsRouter);
 
   app.use(notFoundHandler);
 

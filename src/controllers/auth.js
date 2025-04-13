@@ -105,7 +105,23 @@ export const getOauthUrlController = async (req, res) => {
 
 export const confirmOauthController = async (req, res) => {
   const ticket = await validateCode(req.body.code);
-  await loginOrRegister(ticket.payload.email, ticket.payload.name);
+  const session = await loginOrRegister(
+    ticket.payload.email,
+    ticket.payload.name,
+  );
 
-  res.end();
+  res.cookie('sessionId', session._id, {
+    httpOnly: true,
+    expire: session.refreshTokenValidUntil,
+  });
+  res.cookie('refreshToken', session.refreshToken, {
+    httpOnly: true,
+    expire: session.refreshTokenValidUntil,
+  });
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully refreshed a session!',
+    data: { accessToken: session.accessToken },
+  });
 };
