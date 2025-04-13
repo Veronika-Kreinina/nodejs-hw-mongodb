@@ -2,7 +2,8 @@ tags:
   - Contacts
 summary: Get contact by id
 operationId: getContactById
-description: Retrieves a single contact by its unique ID for the authenticated user.
+description: |
+   Retrieves a single contact by its unique ID for the authenticated user.
       Only the owner of the contact can access this resource.
 
   security:

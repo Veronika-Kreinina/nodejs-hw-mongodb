@@ -2,7 +2,8 @@ tags:
   - Contacts
 summary: Delete a contact
 operationId: deleteContact
-description: Deletes a contact by its ID. Only the owner of the contact can delete it.
+description: |
+   Deletes a contact by its ID. Only the owner of the contact can delete it.
 
 security:
   - bearerAuth: []
@@ -27,6 +28,6 @@ responses:
         description: Contact with the specified ID was not found
         $ref: ../../../components/responses/404.yaml
 
-        '500'
+        '500':
         description: Internal Server Error
         $ref: ../../../components/responses/500.yaml

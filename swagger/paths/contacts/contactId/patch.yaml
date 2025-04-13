@@ -2,7 +2,8 @@ tags:
   - Contacts
 summary: Update a contact (partial)
 operationId: patchContact
-description: Updates one or more fields of an existing contact.
+description: |
+  Updates one or more fields of an existing contact.
   Only the contact's owner can perform this action.
 security:
   - bearerAuth: []
@@ -17,7 +18,7 @@ parameters:
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
         type: object
         properties:
@@ -33,16 +34,20 @@ requestBody:
           phoneNumber:
             type: string
              description: Contact's phone number
-            example: '+1-202-555-0157'
+            example: '+380000000001'
           contactType:
             type: string
-             description: Contact's type
+             ctype
             enum: [work, home, personal]
             example: work
           isFavourite:
             type: boolean
              description: Contact's prio
             example: true
+              photo:
+                type: string
+            description: Contact's photo
+            format: binary
 responses:
   '200':
     description: Contact successfully updated
@@ -59,7 +64,7 @@ responses:
               example: Successfully patched a contact!
             data:
               $ref: ../../../components/schemas/contacts.yaml'
-   '401':
+      '401':
         description: Unauthorized 
         $ref: ../../../components/responses/401.yaml
 
