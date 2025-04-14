@@ -83,13 +83,11 @@ export const resetPasswordController = async (req, res) => {
 
   await resetPassword(token, password);
 
-  res.send('Reset password');
-
-  //   .json({
-  //   status: 200,
-  //   message: 'Password has been successfully reset.',
-  //   data: {},
-  // });
+  res.status(200).json({
+    status: 200,
+    message: 'Password has been successfully reset.',
+    data: {},
+  });
 };
 
 export const getOauthUrlController = async (req, res) => {

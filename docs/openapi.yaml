@@ -12,13 +12,11 @@ info:
 tags:
 - name: Contacts
   description: Operations with contacts
-- name: User
-  description: Operations with users
-- name: Session
-  description: Operations with sessions
+- name: Auth
+  description: Auth operations.
 
 servers:
-  - url: http://127.0.0.1:3000
+  - url: http://localhost:3000
     description: Local server
   - url: https://your-deployment-url.com
     description: Production server
@@ -37,7 +35,8 @@ paths:
       $ref: ../swagger/paths/contacts/get.yaml
     post: 
       $ref: ../swagger/paths/contacts/get.yaml
-
+/auth:
+  
 #  /users/register:
 #     post:
 #       $ref: ./paths/users/register.yaml
