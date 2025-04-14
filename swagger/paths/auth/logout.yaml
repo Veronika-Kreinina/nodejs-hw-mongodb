@@ -7,5 +7,7 @@ description: Log out the current user
 responses:
   '204':
     description: Successfully logged out
+  '404':
+    description: User not found
   '500':
     $ref: '../../components/responses/500.yaml'

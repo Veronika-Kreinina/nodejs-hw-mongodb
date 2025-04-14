@@ -42,10 +42,10 @@ properties:
     description: Contact's photo
     example: https://res.cloudinary.com/.../photo.jpg
   createdAt:
-          type: string
-          format: date-time
-          example: 2025-04-01T10:22:30.000Z
-        updatedAt:
-          type: string
-          format: date-time
-          example: 2025-04-01T10:22:30.000Z
+    type: string
+    format: date-time
+    example: 2025-04-01T10:22:30.000Z
+  updatedAt:
+    type: string
+    format: date-time
+    example: 2025-04-01T10:22:30.000Z

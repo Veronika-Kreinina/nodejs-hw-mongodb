@@ -17,7 +17,6 @@ requestBody:
           - phoneNumber
           - contactType
           - isFavourite
-        
         properties:
           name:
             type: string
@@ -41,8 +40,8 @@ requestBody:
             type: boolean
             description: Contact's priority
             example: false
-              photo:
-                type: string
+          photo:
+            type: string
             description: Contact's photo
             format: binary
 responses:
@@ -60,16 +59,14 @@ responses:
               type: string
               example: Succesfully created a contact
             data:
-              $ref: ../../components/schemas/contacts.yaml'
+              $ref: ../../components/schemas/contacts.yaml
 
-'400':
-  description: Bad Request
-   $ref: ../../components/responses/400.yaml
-
-       '401':
-        description: Unauthorized 
-        $ref: ../../components/responses/401.yaml
-
-        '500'
-        description: Internal Server Error
-        $ref: ../../components/responses/500.yaml
+  '400':
+    description: Bad Request
+    $ref: ../../components/responses/400.yaml
+  '401':
+    description: Unauthorized
+    $ref: ../../components/responses/401.yaml
+  '500':
+    description: Internal Server Error
+    $ref: ../../components/responses/500.yaml

@@ -1,10 +1,10 @@
- tags:
+tags:
     - Auth
-  security: []
-  summary: Log in user
-  operationId: login
-  description: Log in a user with email and password
-  requestBody:
+security: []
+summary: Log in user
+operationId: login
+description: Log in a user with email and password
+requestBody:
     content:
       application/json:
         schema:
@@ -13,16 +13,16 @@
             - email
             - password
           properties:
-          email:
-            type: string
-            description: Contact's  email
-            format: email
-            example: alice.johnson@example.com
-          password:
-            type: string
+            email:
+              type: string
+              description: Contact's  email
+              format: email
+              example: alice.johnson@example.com
+            password:
+              type: string
               description: User's password
               example: qwerty1234
-  responses:
+responses:
     '200':
       description: Login successful
       content:

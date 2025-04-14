@@ -50,8 +50,8 @@ requestBody:
             type: boolean
             description: Contact's priority
             example: false
-              photo:
-                type: string
+          photo:
+            type: string
             description: Contact's photo
             format: binary
 responses:
@@ -85,10 +85,10 @@ responses:
               example: Successfully patched a contact!
             data:
               $ref: '../../../components/schemas/contacts.yaml'
-    '401':
-        description: Unauthorized 
-        $ref: ../../../components/responses/401.yaml
+  '401':
+    description: Unauthorized
+    $ref: ../../../components/responses/401.yaml
 
-        '500'
-        description: Internal Server Error
-        $ref: ../../../components/responses/500.yaml
+  '500':
+    description: Internal Server Error
+    $ref: ../../../components/responses/500.yaml

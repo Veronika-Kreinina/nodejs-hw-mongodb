@@ -1,19 +1,19 @@
-description: Not Found – The requested resource does not exist
+description: Conflict
 content:
   application/json:
     schema:
       type: object
-       required:
+      required:
         - status
         - message
         - data
       properties:
         status:
           type: integer
-          example: 404
+          example: 409
         message:
           type: string
-          example: Not Found Error
+          example: Conflict
         data:
           type: string
-          example: 'Contact not found'
+          example: Task locked. Cannot start a new automation since job is already running
