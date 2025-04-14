@@ -35,21 +35,17 @@ paths:
       $ref: ../swagger/paths/contacts/get.yaml
     post: 
       $ref: ../swagger/paths/contacts/get.yaml
-/auth:
-  
-#  /users/register:
+/auth/register:
 #     post:
 #       $ref: ./paths/users/register.yaml
 
-#   /users/login:
+/auth/login:
 #     post:
 #       $ref: ./paths/users/login.yaml
-
-#   /users/logout:
+/auth/logout:
 #     post:
 #       $ref: ./paths/users/logout.yaml
-
-#   /sessions/refresh:
+/auth/refresh:
 #     post:
 #       $ref: ./paths/sessions/refresh.yaml
 
