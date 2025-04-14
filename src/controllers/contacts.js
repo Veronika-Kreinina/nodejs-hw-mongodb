@@ -47,7 +47,9 @@ export const getContactsController = async (req, res) => {
 export const getContactByIdController = async (req, res) => {
   const { contactId } = req.params;
 
+
   const contact = await getOneContact(contactId, req.user._id);
+
 
   // if (contact.userId.toString() !== req.user.id.toString()) {
   //   throw new createHttpError.Forbidden('Contact is not allowed');
@@ -75,7 +77,7 @@ export const addContactController = async (req, res) => {
       path.resolve('src', 'uploads', req.file.filename),
     );
 
-    photo = `http://localhost:3000/uploads/${req.file.filename}`;
+    photo = `${getEnvVar('APP_DOMAIN')}/uploads/${req.file.filename}`;
   }
 
   const contact = await addContact({
@@ -93,10 +95,31 @@ export const addContactController = async (req, res) => {
 
 export const upsertContactController = async (req, res) => {
   const { contactId } = req.params;
+  let photo = null;
+
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file.path);
+      photo = result.secure_url;
+    } else {
+      await fs.rename(
+        req.file.path,
+        path.resolve('src', 'uploads', req.file.filename),
+      );
+      photo = `${getEnvVar('APP_DOMAIN')}/uploads/${req.file.filename}`;
+    }
+  }
+  const updatedData = {
+    ...req.body,
+    ...(photo && { photo }),
+  };
+
   const { isNew, data } = await updateContact(
     contactId,
+
     req.user._id,
-    req.body,
+    updatedData,
+
     {
       upsert: true,
     },
@@ -113,7 +136,30 @@ export const upsertContactController = async (req, res) => {
 
 export const patchContactController = async (req, res) => {
   const { contactId } = req.params;
+
   const result = await updateContact(contactId, req.user._id, req.body);
+
+  let photo;
+
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file.path);
+      photo = result.secure_url;
+    } else {
+      await fs.rename(
+        req.file.path,
+        path.resolve('src', 'uploads', req.file.filename),
+      );
+      photo = `${getEnvVar('APP_DOMAIN')}/uploads/${req.file.filename}`;
+    }
+  }
+
+  const updatedData = {
+    ...req.body,
+    ...(photo && { photo }),
+  };
+  const result = await updateContact(contactId, req.user._id, updatedData);
+
 
   if (!result) {
     throw new createHttpError(404, 'Contact with id:${contactId} not found');
