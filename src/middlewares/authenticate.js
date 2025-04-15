@@ -28,7 +28,9 @@ export const authenticate = async (req, res, next) => {
   if (user === null) {
     return next(createHttpError.Unauthorized('User not found'));
   }
-  req.user = { id: user._id, name: user.name };
+
+  req.user = user;
+
 
   next();
 };
