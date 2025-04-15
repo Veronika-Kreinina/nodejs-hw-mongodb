@@ -19,9 +19,12 @@ import {
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { upload } from '../middlewares/upload.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const contactsRouter = Router();
 const jsonParser = express.json();
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get('/', ctrlWrapper(getContactsController));
 

@@ -1,6 +1,4 @@
 import createHttpError from 'http-errors';
-import * as fs from 'node:fs/promises';
-import path from 'node:path';
 
 import {
   addContact,
@@ -10,12 +8,13 @@ import {
   updateContact,
 } from '../services/contacts.js';
 
+import { sortByKeys } from '../db/models/Contacts.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
-import { sortByKeys } from '../db/models/Contacts.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
+import { saveFileToUploads } from '../utils/saveToUploads.js';
 
 export const getContactsController = async (req, res) => {
   console.log(req.user);
@@ -64,18 +63,13 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
-  let photo = null;
+  let photo;
 
   if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
     const result = await uploadToCloudinary(req.file.path);
     photo = result.secure_url;
   } else {
-    await fs.rename(
-      req.file.path,
-      path.resolve('src', 'uploads', req.file.filename),
-    );
-
-    photo = `${getEnvVar('APP_DOMAIN')}/uploads/${req.file.filename}`;
+    photo = await saveFileToUploads(req.file);
   }
 
   const contact = await addContact({
@@ -86,7 +80,7 @@ export const addContactController = async (req, res) => {
 
   res.status(201).json({
     status: 201,
-    message: 'Succesfully created a contact',
+    message: 'Successfully created a contact',
     data: contact,
   });
 };
@@ -100,13 +94,10 @@ export const upsertContactController = async (req, res) => {
       const result = await uploadToCloudinary(req.file.path);
       photo = result.secure_url;
     } else {
-      await fs.rename(
-        req.file.path,
-        path.resolve('src', 'uploads', req.file.filename),
-      );
-      photo = `${getEnvVar('APP_DOMAIN')}/uploads/${req.file.filename}`;
+      photo = await saveFileToUploads(req.file);
     }
   }
+
   const updatedData = {
     ...req.body,
     ...(photo && { photo }),
@@ -116,9 +107,7 @@ export const upsertContactController = async (req, res) => {
     contactId,
     req.user.id,
     updatedData,
-    {
-      upsert: true,
-    },
+    { upsert: true },
   );
 
   const status = isNew ? 201 : 200;
@@ -132,18 +121,14 @@ export const upsertContactController = async (req, res) => {
 
 export const patchContactController = async (req, res) => {
   const { contactId } = req.params;
-  let photo;
+  let photo = null;
 
   if (req.file) {
     if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
       const result = await uploadToCloudinary(req.file.path);
       photo = result.secure_url;
     } else {
-      await fs.rename(
-        req.file.path,
-        path.resolve('src', 'uploads', req.file.filename),
-      );
-      photo = `${getEnvVar('APP_DOMAIN')}/uploads/${req.file.filename}`;
+      photo = await saveFileToUploads(req.file);
     }
   }
 
@@ -151,6 +136,7 @@ export const patchContactController = async (req, res) => {
     ...req.body,
     ...(photo && { photo }),
   };
+
   const result = await updateContact(contactId, req.user.id, updatedData);
 
   if (!result) {
