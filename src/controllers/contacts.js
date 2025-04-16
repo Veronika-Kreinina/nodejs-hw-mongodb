@@ -65,7 +65,7 @@ export const addContactController = async (req, res) => {
   console.log('File path:', req.file.path);
   if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
     const result = await uploadToCloudinary(req.file);
-    photo = result.secure_url;
+    photo = result;
   } else {
     photo = await saveFileToUploads(req.file);
   }
