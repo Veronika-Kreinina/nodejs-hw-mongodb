@@ -16,7 +16,7 @@ export const createContactShema = Joi.object({
   contactType: Joi.string()
     .valid(...typeList)
     .required(),
-  photo: Joi.string().uri(),
+  photo: Joi.string().uri().allow('').optional(),
 });
 
 export const updateContactShema = Joi.object({
@@ -31,5 +31,5 @@ export const updateContactShema = Joi.object({
     .max(25),
   isFavourite: Joi.boolean(),
   contactType: Joi.string().valid(...typeList),
-  photo: Joi.string().uri(),
+  photo: Joi.string().uri().allow('').optional(),
 });
