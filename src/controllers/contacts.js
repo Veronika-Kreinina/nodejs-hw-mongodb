@@ -59,17 +59,16 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
-  console.log('File received:', req.file);
   let photo;
 
-  console.log('File path:', req.file.path);
-  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await uploadToCloudinary(req.file);
-    photo = result;
-  } else {
-    photo = await saveFileToUploads(req.file);
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file);
+      photo = result;
+    } else {
+      photo = await saveFileToUploads(req.file);
+    }
   }
-  console.log('photo', photo);
 
   const contact = await addContact({
     ...req.body,
@@ -86,12 +85,12 @@ export const addContactController = async (req, res) => {
 
 export const upsertContactController = async (req, res) => {
   const { contactId } = req.params;
-  let photo = null;
+  let photo;
 
   if (req.file) {
     if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
       const result = await uploadToCloudinary(req.file);
-      photo = result.secure_url;
+      photo = result;
     } else {
       photo = await saveFileToUploads(req.file);
     }
@@ -120,12 +119,12 @@ export const upsertContactController = async (req, res) => {
 
 export const patchContactController = async (req, res) => {
   const { contactId } = req.params;
-  let photo = null;
+  let photo;
 
   if (req.file) {
     if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
       const result = await uploadToCloudinary(req.file);
-      photo = result.secure_url;
+      photo = result;
     } else {
       photo = await saveFileToUploads(req.file);
     }
