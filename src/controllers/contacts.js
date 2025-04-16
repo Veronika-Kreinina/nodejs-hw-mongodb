@@ -48,10 +48,6 @@ export const getContactByIdController = async (req, res) => {
 
   const contact = await getOneContact(contactId, req.user.id);
 
-  // if (contact.userId.toString() !== req.user.id.toString()) {
-  //   throw new createHttpError.Forbidden('Contact is not allowed');
-  // }
-
   if (!contact) {
     throw new createHttpError(404, `Contact with id:${contactId} not found`);
   }
@@ -66,7 +62,7 @@ export const addContactController = async (req, res) => {
   let photo;
 
   if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await uploadToCloudinary(req.file.path);
+    const result = await uploadToCloudinary(req.file);
     photo = result.secure_url;
   } else {
     photo = await saveFileToUploads(req.file);
@@ -91,7 +87,7 @@ export const upsertContactController = async (req, res) => {
 
   if (req.file) {
     if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-      const result = await uploadToCloudinary(req.file.path);
+      const result = await uploadToCloudinary(req.file);
       photo = result.secure_url;
     } else {
       photo = await saveFileToUploads(req.file);
@@ -125,7 +121,7 @@ export const patchContactController = async (req, res) => {
 
   if (req.file) {
     if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-      const result = await uploadToCloudinary(req.file.path);
+      const result = await uploadToCloudinary(req.file);
       photo = result.secure_url;
     } else {
       photo = await saveFileToUploads(req.file);
