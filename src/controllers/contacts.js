@@ -61,11 +61,13 @@ export const getContactByIdController = async (req, res) => {
 export const addContactController = async (req, res) => {
   let photo;
 
-  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await uploadToCloudinary(req.file.path);
-    photo = result.secure_url;
-  } else {
-    photo = await saveFileToUploads(req.file);
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file);
+      photo = result;
+    } else {
+      photo = await saveFileToUploads(req.file);
+    }
   }
 
   const contact = await addContact({
@@ -83,12 +85,12 @@ export const addContactController = async (req, res) => {
 
 export const upsertContactController = async (req, res) => {
   const { contactId } = req.params;
-  let photo = null;
+  let photo;
 
   if (req.file) {
     if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-      const result = await uploadToCloudinary(req.file.path);
-      photo = result.secure_url;
+      const result = await uploadToCloudinary(req.file);
+      photo = result;
     } else {
       photo = await saveFileToUploads(req.file);
     }
@@ -103,9 +105,7 @@ export const upsertContactController = async (req, res) => {
     contactId,
     req.user.id,
     updatedData,
-
     { upsert: true },
-
   );
 
   const status = isNew ? 201 : 200;
@@ -119,14 +119,12 @@ export const upsertContactController = async (req, res) => {
 
 export const patchContactController = async (req, res) => {
   const { contactId } = req.params;
-
-  let photo = null;
-
+  let photo;
 
   if (req.file) {
     if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-      const result = await uploadToCloudinary(req.file.path);
-      photo = result.secure_url;
+      const result = await uploadToCloudinary(req.file);
+      photo = result;
     } else {
       photo = await saveFileToUploads(req.file);
     }
@@ -138,7 +136,6 @@ export const patchContactController = async (req, res) => {
   };
 
   const result = await updateContact(contactId, req.user.id, updatedData);
-
 
   if (!result) {
     throw new createHttpError(404, 'Contact with id:${contactId} not found');
