@@ -8,6 +8,6 @@ cloudinary.v2.config({
   api_secret: getEnvVar('CLOUDINARY_API_SECRET'),
 });
 
-export function uploadToCloudinary(filePath) {
-  return cloudinary.v2.uploader.upload(filePath);
+export function uploadToCloudinary(file) {
+  return cloudinary.v2.uploader.upload(file.path);
 }
