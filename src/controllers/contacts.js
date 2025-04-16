@@ -105,9 +105,7 @@ export const upsertContactController = async (req, res) => {
     contactId,
     req.user.id,
     updatedData,
-
     { upsert: true },
-
   );
 
   const status = isNew ? 201 : 200;
@@ -125,7 +123,6 @@ export const patchContactController = async (req, res) => {
   let photo;
 
 
-
   if (req.file) {
     if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
       const result = await uploadToCloudinary(req.file);
@@ -141,7 +138,6 @@ export const patchContactController = async (req, res) => {
   };
 
   const result = await updateContact(contactId, req.user.id, updatedData);
-
 
   if (!result) {
     throw new createHttpError(404, 'Contact with id:${contactId} not found');
