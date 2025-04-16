@@ -119,7 +119,9 @@ export const upsertContactController = async (req, res) => {
 
 export const patchContactController = async (req, res) => {
   const { contactId } = req.params;
+
   let photo;
+
 
   if (req.file) {
     if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {

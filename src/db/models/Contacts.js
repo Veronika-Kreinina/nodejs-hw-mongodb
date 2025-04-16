@@ -23,7 +23,7 @@ const contactsShema = new Schema(
     contactType: {
       type: String,
       enum: typeList,
-      default: false,
+      default: typeList[0],
       required: true,
     },
 
@@ -34,6 +34,7 @@ const contactsShema = new Schema(
     },
     photo: {
       type: String,
+      required: false,
       default: null,
     },
   },
@@ -49,6 +50,6 @@ export const sortByKeys = [
   'name',
   'phoneNumber',
   'email',
-  'isFavorite',
+  'isFavourite',
   'contactType',
 ];

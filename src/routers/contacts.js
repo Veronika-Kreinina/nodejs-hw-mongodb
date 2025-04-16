@@ -1,7 +1,5 @@
 import { Router } from 'express';
 
-import express from 'express';
-
 import {
   getContactsController,
   getContactByIdController,
@@ -22,7 +20,6 @@ import { upload } from '../middlewares/upload.js';
 import { authenticate } from '../middlewares/authenticate.js';
 
 const contactsRouter = Router();
-const jsonParser = express.json();
 
 contactsRouter.use(authenticate);
 
@@ -44,7 +41,7 @@ contactsRouter.post(
 contactsRouter.put(
   '/:contactId',
   upload.single('photo'),
-  jsonParser,
+
   isValidId,
   validateBody(updateContactShema),
   ctrlWrapper(upsertContactController),
@@ -53,7 +50,7 @@ contactsRouter.put(
 contactsRouter.patch(
   '/:contactId',
   upload.single('photo'),
-  jsonParser,
+
   isValidId,
   validateBody(updateContactShema),
   ctrlWrapper(patchContactController),
