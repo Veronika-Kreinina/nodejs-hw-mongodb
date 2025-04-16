@@ -59,13 +59,15 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
-  let photo;
+  let photo = null;
 
-  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await uploadToCloudinary(req.file);
-    photo = result.secure_url;
-  } else {
-    photo = await saveFileToUploads(req.file);
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file);
+      photo = result.secure_url;
+    } else {
+      photo = await saveFileToUploads(req.file);
+    }
   }
 
   const contact = await addContact({
